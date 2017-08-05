@@ -79,7 +79,7 @@ attachments_json2 =  [
 app = Flask(__name__)
 
 # 슬래커로 연결
-slack = Slacker(env.token)
+slack = Slacker(env.SLACK_BOT_TOKEN)
 
 # 메시지를 보내는 함수
 # 받아온 dict와 메시지에 설정할 컬러
