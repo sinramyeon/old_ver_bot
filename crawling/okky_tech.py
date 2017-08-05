@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 # https://okky.kr/articles/tech?offset=40&max=20&sort=id&order=desc
 
 #recommend_url = "https://okky.kr/articles/tech?query=&sort=voteCount&order=desc"
-recommend_url = "https://okky.kr/articles/tech?offset=0&max=100&sort=voteCount&order=desc"
+recommend_url = "https://okky.kr/articles/tech?offset=0&max=5&sort=voteCount&order=desc"
 #https://okky.kr/articles/tech?offset=20&max=20&sort=voteCount&order=desc
 
 url = "https://okky.kr"
