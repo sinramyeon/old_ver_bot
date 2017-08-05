@@ -1,7 +1,11 @@
 beautifulsoup4==4.6.0
-certifi==2017.7.27.1
-chardet==3.0.4
-idna==2.5
+decorator==4.0.11
+feedparser==5.2.1
+Flask==0.12.2
 lxml==3.8.0
 requests==2.18.3
+rtmbot==0.4.0
+slackclient==1.0.2
+slacker==0.9.50
+slackeventsapi==1.0.0
 urllib3==1.22

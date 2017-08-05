@@ -1,12 +1,9 @@
-import sys
-import os
 from flask import Flask, request, Response, make_response
-from pycparser.ply.yacc import yacc
 from slacker import Slacker
+
 from slackclient import SlackClient
-import websocket
 import json
-import time
+
 from okky_tech import get_blog_lists
 from clien import clien
 from ddaily import ddaily
@@ -14,7 +11,6 @@ from zdnet import zdnet
 from rssParse import rssScrape
 from ycombinator import ycombinator
 import env
-from slackclient import SlackClient
 
 
 # 필요한 변수들
