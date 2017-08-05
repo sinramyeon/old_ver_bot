@@ -30,12 +30,7 @@ def clien(w_recomenct,w_comment,limit_page=50):
                     title_url = tag.select('.list-title a')
                     title_name = title_url[0].text.strip() # 계시물 이름
                     if recomend >= w_recomenct and comment > w_comment: #추천 제한
-                        choice = {
-                            'url' : url,
-                            # 'comment' : comment,
-                            # 'recomend' : recomend,
-                        }
-                        contents[title_name]=choice
+                        contents[title_name]=url
                 except:
                     """  삭제된 계시물 """
 
