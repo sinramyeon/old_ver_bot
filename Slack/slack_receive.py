@@ -8,80 +8,24 @@ import json
 import time
 from okky_tech import get_blog_lists
 from clien import clien
+from ddaily import ddaily
+from zdnet import zdnet
 import env
 from slackclient import SlackClient
 
 
 # 필요한 변수들
+# env.py 만들어서 설정해 놓으면 됩니다!
+
+# 봇 토큰(봇 Oauth 토큰)
 SLACK_BOT_TOKEN = env.token
-SLACK_VERIFICATION_TOKEN = env.SLACK_VERIFICATION_TOKEN
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 
-app = Flask(__name__)
+# Verification 토큰
+SLACK_VERIFICATION_TOKEN = env.SLACK_VERIFICATION_TOKEN
 
-hack_channel = "hackaton2017"
-slack = Slacker(env.token)
 
-Msg = {}
-
-# 플라스크로 채널 채팅 내용을 가져옵니다.
-
-@app.route('/slack', methods=['POST'])
-def inbound():
-    if request.form.get('token') == env.SLACK_WEBHOOK_SECRET:
-
-        # 채널 이름에서
-        channel = request.form.get('channel_name')
-        # 누가 말했는지
-        username = request.form.get('user_name')
-
-        # 내용은?
-        text = request.form.get('text')
-
-        if "@U6JN34THT" in text :
-            slack.chat.post_message(channel, attachments=attachments_json)
-
-        if channel == "hackaton2017" :
-            if "오키" in text :
-
-                blog = get_blog_lists()
-
-                attachments = []
-
-                for k, v in blog.items() :
-
-                    a = {}
-
-                    a["title"] = k
-                    a["title_link"] = v
-                    a["color"] = "#34c9d3"
-
-                    attachments.append(a)
-
-                slack.chat.post_message(channel, attachments=attachments)
-            if "클리앙" in text :
-
-                write = clien(1,10,1)
-
-                print(write)
-
-                attachments = []
-
-                for k, v in write.items() :
-
-                    a = {}
-
-                    a["title"] = k
-                    a["title_link"] = v
-                    a["color"] = "#36a64f"
-
-                    attachments.append(a)
-
-                slack.chat.post_message(channel, attachments=attachments)
-
-    return Response(), 200
-
-# 봇에게 멘션 시
+# 봇에게 멘션 시 답할 멘트
 
 attachments_json = [
     {
@@ -100,7 +44,73 @@ attachments_json = [
     }
 ]
 
+# 플라스크 기동
+app = Flask(__name__)
 
+# 슬래커로 연결
+slack = Slacker(env.token)
+
+# 메시지를 보내는 함수
+# 받아온 dict와 메시지에 설정할 컬러
+def MsgSlack(x, color) :
+
+    attachments = []
+
+    for k, v in x.items():
+        a = {}
+
+        a["title"] = k
+        a["title_link"] = v
+        a["color"] = color
+        attachments.append(a)
+
+    return attachments
+
+
+# 플라스크로 채널 채팅 내용을 가져옵니다.
+@app.route('/slack', methods=['POST'])
+def inbound():
+    if request.form.get('token') == env.SLACK_WEBHOOK_SECRET:
+
+        # 채널 이름에서
+        channel = request.form.get('channel_name')
+        # 누가 말했는지
+        username = request.form.get('user_name')
+        # 내용은?
+        text = request.form.get('text')
+
+        # "" 에게 멘션 시
+        # 봇 ID(이름아님!!) 를 넣어주세요.
+        if "@U6JN34THT" in text :
+            slack.chat.post_message(channel, attachments=attachments_json)
+
+        # "" 채널에서 말할 시
+        # 채널이름(ID아님!!) 을 넣어주세요.
+        if channel == "hackaton2017" :
+            if "오키" in text :
+                blog = get_blog_lists()
+                attachments = MsgSlack(blog, "#2630b7")
+                slack.chat.post_message(channel, attachments=attachments)
+
+            if "클리앙" in text :
+                write = clien(1,10,1)
+                attachments = MsgSlack(write, "#26b769")
+                slack.chat.post_message(channel, attachments=attachments)
+
+            if "지디넷" in text :
+                zd = zdnet()
+                attachments = MsgSlack(zd, "#db7515")
+                slack.chat.post_message(channel, attachments=attachments)
+
+            if "디데일리" in text :
+                dd = ddaily()
+                attachments = MsgSlack(dd, "#db1515")
+                slack.chat.post_message(channel, attachments=attachments)
+
+    return Response(), 200
+
+
+# 봇 버튼 클릭 시
 @app.route("/slack/message_options", methods=["POST"])
 def message_options():
     # Parse the request payload
@@ -115,37 +125,56 @@ def message_options():
             {
                 "text": "클리앙 갔다오기",
                 "value": "clien"
+            },
+            {
+                "text": "디데일리 구경하기",
+                "value": "ddaily"
+            },
+            {
+                "text": "zdnet 날아가기",
+                "value": "zdnet"
             }
         ]
     }
 
     return Response(json.dumps(menu_options), mimetype='application/json')
 
-
+# 봇 버튼 선택 시 2
 @app.route("/slack/message_actions", methods=["POST"])
 def message_actions():
 
-    # Parse the request payload
+    # 리퀘스트 파징
     form_json = json.loads(request.form["payload"])
 
-    # Check to see what the user's selection was and update the message
+    # 선택한 값이 뭔지 보기
     selection = form_json["actions"][0]["selected_options"][0]["value"]
 
     if selection == "okky":
         message_text = "오키 소식을 물어다 줄게요.\n기다려 주세요..."
-    else:
-        message_text = ":horse:"
+        blog = get_blog_lists()
+        attachments = MsgSlack(blog, "#2630b7")
+    elif selection == "clien":
+        message_text = "클리앙에 다녀올게요.\n기다려 주세요..."
+        write = clien(1,10,1)
+        attachments = MsgSlack(write, "#26b769")
+    elif selection == "zdnet":
+        message_text = "지디넷에 날아갔다 올게요.\n기다려 주세요..."
+        zd = zdnet()
+        attachments = MsgSlack(zd, "#db7515")
+    elif selection == "ddaily":
+        message_text = "디데일리를 구경하고 올게요.\n기다려 주세요..."
+        dd = ddaily()
+        attachments = MsgSlack(dd, "#db1515")
 
     response = slack_client.api_call(
         "chat.update",
         channel=form_json["channel"]["id"],
         ts=form_json["message_ts"],
         text=message_text,
-        attachments=[]
+        attachments=attachments
     )
 
     return make_response("", 200)
-
 
 
 ## 6. 플라스크 서버 연결 테스트용 함수
@@ -154,9 +183,7 @@ def test():
     return Response('확인!')
 
 ## 메인 시작
-
 if __name__ == "__main__":
-
     app.run(debug=True)
         
 

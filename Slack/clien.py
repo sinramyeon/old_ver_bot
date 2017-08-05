@@ -19,16 +19,13 @@ def clien(w_recomenct,w_comment,limit_page=50):
         soup = BeautifulSoup(html,'html.parser')
         try:
             soup.select('.card-grid .list-empty')[0].text
-
-            print(contents)
-
             return contents
         except:
             for tag in soup.select('.post-list .list-row'):
                 try:
                     comment = int(tag.select('.badge-reply')[0].text)
                     good_number=tag.select('span')
-                    recomend = int(good_number[0].text) #추천 수 
+                    recomend = int(good_number[0].text) #추천 수
                     url = urljoin(main_url,tag.find('a')['href'])
                     title_url = tag.select('.list-title a')
                     title_name = title_url[0].text.strip() # 계시물 이름
@@ -50,4 +47,4 @@ def clien(w_recomenct,w_comment,limit_page=50):
 
 
 
-# test=clien(1,10,1)  # 사용 예
+# test=clien(1,10,1)  # 사용 예 
