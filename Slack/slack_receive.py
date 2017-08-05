@@ -44,6 +44,37 @@ attachments_json = [
     }
 ]
 
+attachments_json2 =  [
+                {
+                    "text": "IT무새를 다시 불러올까요?",
+                    "fallback": "IT무새는 이미 날아간 후입니다.",
+                    "callback_id": "button_tutorial",
+                    "color": "#050772",
+                    "attachment_type": "default",
+                    "actions": [
+                        {
+                            "name": "yes",
+                            "text": "네",
+                            "type": "button",
+                            "value": "yes"
+                        },
+                        {
+                            "name": "no",
+                            "text": "아니",
+                            "type": "button",
+                            "value": "no"
+                        },
+                        {
+                            "name": "maybe",
+                            "text": "글쎄",
+                            "type": "button",
+                            "value": "maybe",
+                            "style": "danger"
+                        }
+                    ]
+                }
+            ]
+
 # 플라스크 기동
 app = Flask(__name__)
 
@@ -82,7 +113,16 @@ def inbound():
         # "" 에게 멘션 시
         # 봇 ID(이름아님!!) 를 넣어주세요.
         if "@U6JN34THT" in text :
-            slack.chat.post_message(channel, attachments=attachments_json)
+
+            if "안녕" in text :
+                slack.chat.post_message(channel, "짹짹")
+            if "메롱" in text :
+                slack.chat.post_message(channel, ":thinking_face: ?")
+            if "꺼져" in text :
+                slack.chat.post_message(channel, "IT무새는 화가 나서 날아갔다!!! :anger:")
+                slack.chat.post_message(channel, "", attachments= attachments_json2)
+            else :
+                slack.chat.post_message(channel, attachments=attachments_json)
 
         # "" 채널에서 말할 시
         # 채널이름(ID아님!!) 을 넣어주세요.
@@ -110,7 +150,7 @@ def inbound():
     return Response(), 200
 
 
-# 봇 버튼 클릭 시
+# 무새 -1 명령하기
 @app.route("/slack/message_options", methods=["POST"])
 def message_options():
     # Parse the request payload
@@ -139,32 +179,52 @@ def message_options():
 
     return Response(json.dumps(menu_options), mimetype='application/json')
 
-# 봇 버튼 선택 시 2
+# 무새 2 - 선택에 따른 명령
 @app.route("/slack/message_actions", methods=["POST"])
 def message_actions():
 
     # 리퀘스트 파징
     form_json = json.loads(request.form["payload"])
 
-    # 선택한 값이 뭔지 보기
-    selection = form_json["actions"][0]["selected_options"][0]["value"]
+    # 선택한 값이 버튼일 때
+    
+    if form_json["actions"][0]["type"] == "button" :
 
-    if selection == "okky":
-        message_text = "오키 소식을 물어다 줄게요.\n기다려 주세요..."
-        blog = get_blog_lists()
-        attachments = MsgSlack(blog, "#2630b7")
-    elif selection == "clien":
-        message_text = "클리앙에 다녀올게요.\n기다려 주세요..."
-        write = clien(1,10,1)
-        attachments = MsgSlack(write, "#26b769")
-    elif selection == "zdnet":
-        message_text = "지디넷에 날아갔다 올게요.\n기다려 주세요..."
-        zd = zdnet()
-        attachments = MsgSlack(zd, "#db7515")
-    elif selection == "ddaily":
-        message_text = "디데일리를 구경하고 올게요.\n기다려 주세요..."
-        dd = ddaily()
-        attachments = MsgSlack(dd, "#db1515")
+        button =form_json["actions"][0]["value"]
+
+        if button == "yes" :
+            message_text = "IT무새는 다시 돌아왔다..."
+            attachments = attachments_json
+        if button == "no" :
+            message_text = "그래도 IT무새는 당신을 용서한다..."
+            attachments = attachments_json
+        if button == "maybe" :
+            message_text = "IT무새는 당신이 밉다...."
+            attachments = attachments_json2
+
+
+    # 선택한 값이 셀렉션일 때
+
+    else :
+
+        selection = form_json["actions"][0]["selected_options"][0]["value"]
+
+        if selection == "okky":
+            message_text = "오키 소식을 물어다 줄게요.\n기다려 주세요..."
+            blog = get_blog_lists()
+            attachments = MsgSlack(blog, "#2630b7")
+        elif selection == "clien":
+            message_text = "클리앙에 다녀올게요.\n기다려 주세요..."
+            write = clien(1,10,1)
+            attachments = MsgSlack(write, "#26b769")
+        elif selection == "zdnet":
+            message_text = "지디넷에 날아갔다 올게요.\n기다려 주세요..."
+            zd = zdnet()
+            attachments = MsgSlack(zd, "#db7515")
+        elif selection == "ddaily":
+            message_text = "디데일리를 구경하고 올게요.\n기다려 주세요..."
+            dd = ddaily()
+            attachments = MsgSlack(dd, "#db1515")
 
     response = slack_client.api_call(
         "chat.update",
