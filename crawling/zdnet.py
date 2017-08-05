@@ -9,11 +9,7 @@ def zdnet():
     for tag in soup.select('li div a'):
         title_name = tag.select('span')[0].text.strip()
         url = tag['href']
-        choice = {
-                'url' : url,
-                'title_name' : title_name,
-        }
-        contents[url]=choice
+        contents[title_name]=url
     return contents
 
-print(zdnet())
+# print(zdnet())

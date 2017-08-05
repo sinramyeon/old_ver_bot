@@ -32,19 +32,14 @@ def clien(w_recomenct,w_comment,limit_page=50):
                     if recomend >= w_recomenct and comment > w_comment: #추천 제한
                         choice = {
                             'url' : url,
-                            'comment' : comment,
-                            'title_name' : title_name,
-                            'recomend' : recomend,
+                            # 'comment' : comment,
+                            # 'recomend' : recomend,
                         }
-                        contents[url]=choice
-#                         print("==================================")
-#                         print("추천수 : {}".format(recomend))
-#                         print("계시물 이름 : {}".format(title_name))
-#                         print("댓글 수 : {}".format(comment))
-#                         print("URL : {}".format(url))
+                        contents[title_name]=choice
                 except:
                     """  삭제된 계시물 """
 
 
 
 # test=clien(1,10,1)  # 사용 예 
+# print(test)
