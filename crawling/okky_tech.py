@@ -29,4 +29,4 @@ def get_blog_lists():
         title_dict.update({title:title_link})
 
 
-get_blog_lists()
+# get_blog_lists()
