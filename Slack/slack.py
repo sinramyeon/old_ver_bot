@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, make_response
+from flask import Flask, request, Response, make_response, redirect, session
 from slacker import Slacker
 
 from slackclient import SlackClient
@@ -10,18 +10,27 @@ from ddaily import ddaily
 from zdnet import zdnet
 from rssParse import rssScrape
 from ycombinator import ycombinator
-import env
+import envsetting
+import requests
+import random
+import string
+import datetime
 
+
+# import SlackOAuth
+from urllib.parse import urlencode
 
 # 필요한 변수들
 # env.py 만들어서 설정해 놓으면 됩니다!
 
 # 봇 토큰(봇 Oauth 토큰)
-SLACK_BOT_TOKEN = env.SLACK_BOT_TOKEN
+SLACK_BOT_TOKEN = envsetting.SLACK_BOT_TOKEN
 slack_client = SlackClient(SLACK_BOT_TOKEN)
+SECRET_KEY = envsetting.SECRET_KEY
+
 
 # Verification 토큰
-SLACK_VERIFICATION_TOKEN = env.SLACK_VERIFICATION_TOKEN
+SLACK_VERIFICATION_TOKEN = envsetting.SLACK_VERIFICATION_TOKEN
 
 
 # 봇에게 멘션 시 답할 멘트
@@ -76,10 +85,36 @@ attachments_json2 =  [
             ]
 
 # 플라스크 기동
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
+app.secret_key = envsetting.app_secret
+app.config['SESSION_TYPE'] = 'filesystem'
+
 
 # 슬래커로 연결
-slack = Slacker(env.SLACK_BOT_TOKEN)
+slack = Slacker(envsetting.SLACK_BOT_TOKEN)
+
+if datetime.datetime.now().time().hour == 12 :
+    slack.chat.post_message("general", "It's highhhhhhhh noon ㅡ IT무새가 석양 시 석양 분 석양 초를 알려드립니다.")
+
+if datetime.datetime.now().time().hour == 1 :
+    slack.chat.post_message("general", "It's more than 1 hours to highhhhhhhh noon ㅡ IT무새가 자야 할 때를 알려드립니다.")
+
+
+if datetime.datetime.now().time().hour == 2 :
+    slack.chat.post_message("general", "It's more than 2 hours to highhhhhhhh noon ㅡ IT무새가 제발 자야 할 때를 알려드립니다.")
+
+
+if datetime.datetime.now().time().hour == 3 :
+    slack.chat.post_message("general", "It's more than 3 hours to highhhhhhhh noon ㅡ IT무새가 이미 자기는 늦은 할 때를 알려드립니다.")
+
+if datetime.datetime.now().time().hour == 4 :
+    slack.chat.post_message("general", "It's more than 4 hours to highhhhhhhh noon ㅡ IT무새가 내일 출근이 망한 때를 알려드립니다.")
+
+if datetime.datetime.now().time().hour == 5 :
+    slack.chat.post_message("general", "It's more than 55555555555 ㅡ IT무새가 과로에 죽고 말았습니다.")
+
+if datetime.datetime.now().time().hour == 6 :
+    slack.chat.post_message("general", "It's 6 o' clock ㅡ IT무새가 새로 태어났습니다.")
 
 # 메시지를 보내는 함수
 # 받아온 dict와 메시지에 설정할 컬러
@@ -101,7 +136,8 @@ def MsgSlack(x, color) :
 # 플라스크로 채널 채팅 내용을 가져옵니다.
 @app.route('/slack', methods=['POST'])
 def inbound():
-    if request.form.get('token') == env.SLACK_WEBHOOK_SECRET:
+
+    if request.form.get('token') == envsetting.SLACK_WEBHOOK_SECRET :
 
         # 채널 이름에서
         channel = request.form.get('channel_name')
@@ -265,10 +301,78 @@ def message_actions():
 
 
 ## 6. 플라스크 서버 연결 테스트용 함수
-@app.route('/', methods=['GET'])
-def test():
-    return Response('확인!')
+app.config['SESSION_TYPE'] = 'filesystem'
+
+@app.route('/')
+def hello_world():
+    return 'It works!'
+
+# 앱 디플로이 하고 싶을 때
+# 참고로 며칠 걸린다고... 슬랙에서 직접 리뷰를 해서 허가해 준답니다(뻐큐...)
+
+# 이 주소는 oAuth 리다이렉트 주소에 설정하시면 됩니다.
+@app.route('/slackapi')
+def slackRoot():
+
+    # 얘들이 위 주소창에 보면 있습니다.
+    oauth_code = request.args.get('code', '')
+    oauth_state = request.args.get('state', '')
+    oauth_error = request.args.get('error', '')
+
+
+    if oauth_code:
+        if oauth_state == session.pop('_csrf_token', None):
+
+            # 유저가 승인 거절시
+            if oauth_error:
+                return '거절하다뇨 ... . . . <b>{}</b>'.format(oauth_error)
+            else:
+                oauth_url = SlackOAuth.oauth(
+                    client_id=envsetting.client_id,
+                    client_secret=envsetting.SECRET_KEY,
+                    code=oauth_code
+                )
+                s = requests.get(oauth_url)
+                return s.text
+        else:
+            return '<b>CSRF token 이 틀렸어요!</b>'
+    else:
+        return ' <a href="/slackapi/oauth">/slackapi/oauth</a> 로 가면 테스트를 해볼 수 있습니다.'
+
+# 이 주소는 oAuth 리다이렉트 주소에 설정하시면 됩니다.
+
+@app.route('/oauth')
+def slackOAuth():
+
+    # 리턴해줄 값은 id와 scope(어디까지 허용해줄래?) 가 있습니다.
+    auth_url, csrf_token = authorize(
+        client_id=envsetting.client_id,
+        # 참고로 scope는 아주 복잡하고 bot이랑 같이 뭐가 안된다는 둥 아주 귀찮게 굽니다...
+        # 여기 (https://api.slack.com/docs/oauth-scopes) 를 참고해서 더하세요.
+        scope='bot'
+    )
+
+    session['_csrf_token'] = csrf_token
+
+    return redirect(auth_url)
+
+# 인증하기
+def authorize(**kwargs):
+    if 'state' in kwargs:
+        token = kwargs['state']
+    else:
+        token = _gen_csrf_token(10)
+        kwargs['state'] = token
+    return 'https://slack.com/oauth/authorize?' + urlencode(kwargs), token
+
+def oauth(**kwargs):
+    return 'https://slack.com/api/oauth.access?' + urlencode(kwargs)
+
+def _gen_csrf_token(N):
+    return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(N))
 
 ## 메인 시작
 if __name__ == "__main__":
     app.run(debug=True)
+
+    print(datetime.datetime.now().time())
