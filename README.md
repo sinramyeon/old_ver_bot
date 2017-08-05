@@ -11,8 +11,8 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 ---
 
 위 봇은 아래와 같이 작동합니다.
-![](/src/HQ_bot/1.gif)
-![](/src/HQ_bot/2.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/1.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/2.gif)
 
 ---
 
@@ -20,9 +20,9 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 
 ### @봇 이름
 
-봇에게 멘션할 시 
+봇에게 멘션할 시 버튼 선택 기능을 답변해 줍니다.
 
-### 오키, 클리앙 , 지디넷, 디데일리, 블로그, 시사 키워드 입력 시 해당 사이트를 크롤링하여 보여줍니다.
+### `오키`, `클리앙` , `지디넷`, `디데일리`, `블로그`, `시사` 키워드 입력 시 해당 사이트를 크롤링하여 보여줍니다.
 
 ---
 
@@ -37,10 +37,11 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 왜 앱에서 봇을 만드냐면, 앱만이 interaction(사용자의 버튼 클릭 등)을 할 수 있거든요!
 
 2. 슬랙 봇 토큰들을 등록합니다.
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/1.gif)
+![](https://github.com/hero0926/HQ_bot/blob/master/slack1.PNG?raw=true)
 
 3. oAuth도 만들어서 등록합니다.
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/2.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/slack2.png)
+
 
 위 곳에서 등록할 수 있습니다.(사실 어디인지 찾기가 아주 불편합니다)
 
@@ -73,6 +74,31 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 11. `pip install requirements.txt`로 필요 라이브러리도 설치 한 후,
 
 12. 봇을 `python slack.py` 로 실행 해 보세요
+
+---
+
+### 소스 설명
+
+```
+# 주석을 보시면 되시지만 몇몇 내용에 대해 설명해 드립니다.
+
+# clien, ddaily, okky_tech, rssParse, ycombinator, zdnet은 각 사이트에서 크롤링을 해오는 내용입니다.
+# 자기 취향에 따라 여러 곳에서 문서를 얻어와 보세요.
+
+# rssParse는 rss 구독이 가능한 기술 블로그들 중 랜덤으로 5곳에서 HTML을 파징해와 가장 최신 글과 URL을 리턴합니다.
+
+# slack.py가 메시지를 받아오고 보내는 주 소스입니다.
+
+## MsgSlack()함수는 크롤링해 받아온 딕셔너리를 넣어서, 슬랙에 보낼 내용을 리턴합니다.
+### title, title link, color 등은 슬랙 attachment의 양식입니다.(*json 형식)
+
+## inbound는 슬랙과 통신하는 함수입니다.
+### 채널별, 메시지별로 반응을 다르게 하고 있습니다.
+
+## message_options 과 message_actions 은 슬랙에서 사용자가 봇에게 반응한 내용을 받아온 후 작동하는 함수입니다.
+### 선택을 버튼으로 했는지, 아니면 셀렉트 박스로 했는지에 따라 다르게 반응 하도록 구현 해 두었습니다.
+
+```
 
 ---
 

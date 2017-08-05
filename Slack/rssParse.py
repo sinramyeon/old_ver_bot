@@ -159,15 +159,23 @@ def rssScrape() :
 
     rssList = {}
 
+# feedParser 도큐먼트 보기(https://pypi.python.org/pypi/feedparser)
+
+    # 5개만 가져오고 싶다.
     for x in range(0, 6) :
+
+        # dev_url 내 중 랜덤으로 하나를 뽑아온다.
         k, v = random.choice(list(dev_url.items()))
         url = ""
         feed = feedparser.parse(v)
+
+        # 가끔 title이 없는(잘못된 주소)가 있는데
         try :
             title = feed["entries"][0]["title"]
         except :
             title = ""
 
+        # 어떤 rss는 주소가 link에, 어떤 건 url 에 있음
 
         try:
             url = feed["entries"][0]["link"]
@@ -176,6 +184,8 @@ def rssScrape() :
                 url = feed["entries"][0]["url"]
             except :
                 url = ""
+
+        # title 이나 url이 공백일 때는 넣지 않아 주면 됩니다.
 
         if title :
             if url :
