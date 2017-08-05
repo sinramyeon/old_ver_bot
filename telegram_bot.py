@@ -11,7 +11,7 @@ for key in okky_list:
 
 
 # print(okky_list)
-bot = telegram.Bot(token='427898694:AAELlD5oznmGGuskujn-L8VJQgHzpQglZlY')
+bot = telegram.Bot(token='')
 
 updates = bot.getUpdates()
 # print(updates)
