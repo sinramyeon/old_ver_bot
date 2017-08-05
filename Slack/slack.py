@@ -17,7 +17,7 @@ import env
 # env.py 만들어서 설정해 놓으면 됩니다!
 
 # 봇 토큰(봇 Oauth 토큰)
-SLACK_BOT_TOKEN = env.token
+SLACK_BOT_TOKEN = env.SLACK_BOT_TOKEN
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 
 # Verification 토큰

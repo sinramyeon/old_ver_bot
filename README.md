@@ -40,11 +40,15 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 ![](https://www.fullstackpython.com/img/160604-simple-python-slack-bot/custom-bot-users.png)
 왜 앱에서 봇을 만드냐면, 앱만이 interaction(사용자의 버튼 클릭 등)을 할 수 있거든요!
 
-2. 슬랙 봇 토큰들을 등록합니다.
+2. 슬랙 토큰들을 등록합니다.
 ![](https://github.com/hero0926/HQ_bot/blob/master/slack1.PNG?raw=true)
+
+SLACK_VERIFICATION_TOKEN 에 등록하세요.
 
 3. oAuth도 만들어서 등록합니다.
 ![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/slack2.png)
+
+아래 있는 토큰을 SLACK_BOT_TOKEN 에 등록하세요.
 
 
 위 곳에서 등록할 수 있습니다.(사실 어디인지 찾기가 아주 불편합니다)
@@ -73,7 +77,9 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 
 9. ![](https://realpython.com/images/blog_images/slack-api/slack-outgoing-webhooks-settings.png) 포스팅할 채널 이름을 입력하고, URL에 저런식으로 `자기 주소/slack`으로 설정하세요.
 
-10. 설정에 `SLACK_WEBHOOK_SECRET` 도 등록하세요.
+여기 토큰을 SLACK_WEBHOOK_SECRET 에 등록하세요.
+
+10. 자기가 쓸 채널에 만든 봇을 추가하세요. `/invite @봇이름`
 
 11. `pip install requirements.txt`로 필요 라이브러리도 설치 한 후,
 
@@ -81,7 +87,6 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 
 ---
 
-<<<<<<< HEAD
 ### 소스 설명
 
 ```
@@ -110,5 +115,4 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 
 ---
 
-=======
 ##### 질문이나 안되는 기능은 이슈에 적어 주세요.
