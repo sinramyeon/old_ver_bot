@@ -11,8 +11,8 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 ---
 
 위 봇은 아래와 같이 작동합니다.
-![](/src/HQ_bot/1.gif)
-![](/src/HQ_bot/2.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/1.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/2.gif)
 
 ---
 
