@@ -1,6 +1,7 @@
 import sys
 import os
 from flask import Flask, request, Response, make_response
+from pycparser.ply.yacc import yacc
 from slacker import Slacker
 from slackclient import SlackClient
 import websocket
@@ -10,6 +11,8 @@ from okky_tech import get_blog_lists
 from clien import clien
 from ddaily import ddaily
 from zdnet import zdnet
+from rssParse import rssScrape
+from ycombinator import ycombinator
 import env
 from slackclient import SlackClient
 
@@ -116,9 +119,9 @@ def inbound():
 
             if "안녕" in text :
                 slack.chat.post_message(channel, "짹짹")
-            if "메롱" in text :
+            elif "메롱" in text :
                 slack.chat.post_message(channel, ":thinking_face: ?")
-            if "꺼져" in text :
+            elif "꺼져" in text :
                 slack.chat.post_message(channel, "IT무새는 화가 나서 날아갔다!!! :anger:")
                 slack.chat.post_message(channel, "", attachments= attachments_json2)
             else :
@@ -128,8 +131,8 @@ def inbound():
         # 채널이름(ID아님!!) 을 넣어주세요.
         if channel == "hackaton2017" :
             if "오키" in text :
-                blog = get_blog_lists()
-                attachments = MsgSlack(blog, "#2630b7")
+                okky = get_blog_lists()
+                attachments = MsgSlack(okky, "#2630b7")
                 slack.chat.post_message(channel, attachments=attachments)
 
             if "클리앙" in text :
@@ -146,6 +149,17 @@ def inbound():
                 dd = ddaily()
                 attachments = MsgSlack(dd, "#db1515")
                 slack.chat.post_message(channel, attachments=attachments)
+
+            if "블로그" in text :
+                blog = rssScrape()
+                attachments = MsgSlack(blog,"#5f0472")
+                slack.chat.post_message(channel, attachments=attachments)
+
+            if "시사" in text :
+                sisa = ycombinator()
+                attachments = MsgSlack(sisa,"#e50d72")
+                slack.chat.post_message(channel, attachments=attachments)
+
 
     return Response(), 200
 
@@ -173,6 +187,14 @@ def message_options():
             {
                 "text": "zdnet 날아가기",
                 "value": "zdnet"
+            },
+            {
+                "text": "기술 블로그 염탐하기",
+                "value": "blog"
+            },
+            {
+                "text": "시사 상식 배우기",
+                "value": "sisa"
             }
         ]
     }
@@ -211,8 +233,8 @@ def message_actions():
 
         if selection == "okky":
             message_text = "오키 소식을 물어다 줄게요.\n기다려 주세요..."
-            blog = get_blog_lists()
-            attachments = MsgSlack(blog, "#2630b7")
+            okky = get_blog_lists()
+            attachments = MsgSlack(okky, "#2630b7")
         elif selection == "clien":
             message_text = "클리앙에 다녀올게요.\n기다려 주세요..."
             write = clien(1,10,1)
@@ -225,6 +247,14 @@ def message_actions():
             message_text = "디데일리를 구경하고 올게요.\n기다려 주세요..."
             dd = ddaily()
             attachments = MsgSlack(dd, "#db1515")
+        elif selection == "blog" :
+            message_text = "블로그를 염탐하고 올게요.\n오래 걸려요!\n기다려 주세요..."
+            blog = rssScrape()
+            attachments = MsgSlack(blog,"#5f0472")
+        elif selection == "sisa" :
+            message_text = "시사 상식을 공부할래요.\n기다려 주세요..."
+            sisa = ycombinator()
+            attachments = MsgSlack(sisa,"#5f0472")
 
     response = slack_client.api_call(
         "chat.update",
@@ -245,7 +275,3 @@ def test():
 ## 메인 시작
 if __name__ == "__main__":
     app.run(debug=True)
-        
-
-
-
