@@ -37,10 +37,11 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 왜 앱에서 봇을 만드냐면, 앱만이 interaction(사용자의 버튼 클릭 등)을 할 수 있거든요!
 
 2. 슬랙 봇 토큰들을 등록합니다.
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/1.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/slack1.png)
 
 3. oAuth도 만들어서 등록합니다.
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/2.gif)
+![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/slack2.png)
+
 
 위 곳에서 등록할 수 있습니다.(사실 어디인지 찾기가 아주 불편합니다)
 
