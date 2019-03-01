@@ -1,5 +1,7 @@
 # HQ_bot
 
+## urllib, requests 버전업이 필요합니다!!!!
+
 python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같습니다.
 
 1. Flask
