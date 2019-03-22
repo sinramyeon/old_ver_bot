@@ -4,12 +4,6 @@ from slacker import Slacker
 from slackclient import SlackClient
 import json
 
-from okky_tech import get_blog_lists
-from clien import clien
-from ddaily import ddaily
-from zdnet import zdnet
-from rssParse import rssScrape
-from ycombinator import ycombinator
 import envsetting
 import requests
 import random
@@ -38,14 +32,14 @@ SLACK_VERIFICATION_TOKEN = envsetting.SLACK_VERIFICATION_TOKEN
 # 여기를 보세요 -> (https://api.slack.com/docs/messages/builder?msg=%7B%22attachments%22%3A%5B%7B%22fallback%22%3A%22Required%20plain-text%20summary%20of%20the%20attachment.%22%2C%22color%22%3A%22%2336a64f%22%2C%22pretext%22%3A%22Optional%20text%20that%20appears%20above%20the%20attachment%20block%22%2C%22author_name%22%3A%22Bobby%20Tables%22%2C%22author_link%22%3A%22http%3A%2F%2Fflickr.com%2Fbobby%2F%22%2C%22author_icon%22%3A%22http%3A%2F%2Fflickr.com%2Ficons%2Fbobby.jpg%22%2C%22title%22%3A%22Slack%20API%20Documentation%22%2C%22title_link%22%3A%22https%3A%2F%2Fapi.slack.com%2F%22%2C%22text%22%3A%22Optional%20text%20that%20appears%20within%20the%20attachment%22%2C%22fields%22%3A%5B%7B%22title%22%3A%22Priority%22%2C%22value%22%3A%22High%22%2C%22short%22%3Afalse%7D%5D%2C%22image_url%22%3A%22http%3A%2F%2Fmy-website.com%2Fpath%2Fto%2Fimage.jpg%22%2C%22thumb_url%22%3A%22http%3A%2F%2Fexample.com%2Fpath%2Fto%2Fthumb.png%22%2C%22footer%22%3A%22Slack%20API%22%2C%22footer_icon%22%3A%22https%3A%2F%2Fplatform.slack-edge.com%2Fimg%2Fdefault_application_icon.png%22%2C%22ts%22%3A123456789%7D%5D%7D)
 attachments_json = [
     {
-        "fallback": "무슨 일이신가요?",
+        "fallback": "what do you want to eat?",
         "color": "#3AA3E3",
         "attachment_type": "default",
         "callback_id": "menu_options_2319",
         "actions": [
             {
-                "name": "IT무새가 할일",
-                "text": "IT무새는 뭘 할까?",
+                "name": "Today's Lunch Menu",
+                "text": "No.1 Prioty? What to Eat!",
                 "type": "select",
                 "data_source": "external"
             }
@@ -55,27 +49,27 @@ attachments_json = [
 
 attachments_json2 =  [
                 {
-                    "text": "IT무새를 다시 불러올까요?",
-                    "fallback": "IT무새는 이미 날아간 후입니다.",
+                    "text": "LunchParrot has gone!?",
+                    "fallback": "Do you want to stay in office?",
                     "callback_id": "button_tutorial",
                     "color": "#050772",
                     "attachment_type": "default",
                     "actions": [
                         {
                             "name": "yes",
-                            "text": "네",
+                            "text": "yes",
                             "type": "button",
                             "value": "yes"
                         },
                         {
                             "name": "no",
-                            "text": "아니",
+                            "text": "no",
                             "type": "button",
                             "value": "no"
                         },
                         {
                             "name": "maybe",
-                            "text": "글쎄",
+                            "text": "maybe",
                             "type": "button",
                             "value": "maybe",
                             "style": "danger"
@@ -94,27 +88,15 @@ app.config['SESSION_TYPE'] = 'filesystem'
 slack = Slacker(envsetting.SLACK_BOT_TOKEN)
 
 if datetime.datetime.now().time().hour == 12 :
-    slack.chat.post_message("general", "It's highhhhhhhh noon ㅡ IT무새가 석양 시 석양 분 석양 초를 알려드립니다.")
+    slack.chat.post_message("general", "It's highhhhhhhh noon ㅡ LunchParrot says it is almost time to eat.")
 
-if datetime.datetime.now().time().hour == 1 :
-    slack.chat.post_message("general", "It's more than 1 hours to highhhhhhhh noon ㅡ IT무새가 자야 할 때를 알려드립니다.")
-
-
-if datetime.datetime.now().time().hour == 2 :
-    slack.chat.post_message("general", "It's more than 2 hours to highhhhhhhh noon ㅡ IT무새가 제발 자야 할 때를 알려드립니다.")
+if datetime.datetime.now().time().hour == 13 :
+    slack.chat.post_message("general", "It's more than 1 hours to highhhhhhhh noon ㅡ LunchParrot says he's hungry.")
 
 
-if datetime.datetime.now().time().hour == 3 :
-    slack.chat.post_message("general", "It's more than 3 hours to highhhhhhhh noon ㅡ IT무새가 이미 자기는 늦은 할 때를 알려드립니다.")
+if datetime.datetime.now().time().hour == 14 :
+    slack.chat.post_message("general", "It's more than 2 hours to highhhhhhhh noon ㅡ LunchParrot is HANGRY.")
 
-if datetime.datetime.now().time().hour == 4 :
-    slack.chat.post_message("general", "It's more than 4 hours to highhhhhhhh noon ㅡ IT무새가 내일 출근이 망한 때를 알려드립니다.")
-
-if datetime.datetime.now().time().hour == 5 :
-    slack.chat.post_message("general", "It's more than 55555555555 ㅡ IT무새가 과로에 죽고 말았습니다.")
-
-if datetime.datetime.now().time().hour == 6 :
-    slack.chat.post_message("general", "It's 6 o' clock ㅡ IT무새가 새로 태어났습니다.")
 
 # 메시지를 보내는 함수
 # 받아온 dict와 메시지에 설정할 컬러
@@ -146,52 +128,54 @@ def inbound():
         # 내용은?
         text = request.form.get('text')
 
+        print(channel, username, text)
+
         # "" 에게 멘션 시
         # 봇 ID(이름아님!!) 를 넣어주세요.
-        if "@U6JN34THT" in text :
 
-            if "안녕" in text :
-                slack.chat.post_message(channel, "짹짹")
-            elif "메롱" in text :
-                slack.chat.post_message(channel, ":thinking_face: ?")
-            elif "꺼져" in text :
-                slack.chat.post_message(channel, "IT무새는 화가 나서 날아갔다!!! :anger:")
-                slack.chat.post_message(channel, "", attachments= attachments_json2)
-            else :
-                slack.chat.post_message(channel, attachments=attachments_json)
+        if "Hello" in text or "hello" in text :
+            slack.chat.post_message(channel, "Hallo")
+        elif "Hallo" in text or "hallo" in text :
+            slack.chat.post_message(channel, "привет :thinking_face: ?")
+        elif "Get lost" in text or "get lost" in text :
+            slack.chat.post_message(channel, "!!! :anger:")
+            slack.chat.post_message(channel, "", attachments= attachments_json2)
+        else :
+            slack.chat.post_message(channel, attachments=attachments_json)
 
         # "" 채널에서 말할 시
         # 채널이름(ID아님!!) 을 넣어주세요.
-        if channel == "hackaton2017" :
-            if "오키" in text :
-                okky = get_blog_lists()
-                attachments = MsgSlack(okky, "#2630b7")
-                slack.chat.post_message(channel, attachments=attachments)
+        if channel == "lunch" :
+            print("lunch channel...")
+            # if "오키" in text :
+            #     okky = get_blog_lists()
+            #     attachments = MsgSlack(okky, "#2630b7")
+            #     slack.chat.post_message(channel, attachments=attachments)
 
-            if "클리앙" in text :
-                write = clien(1,10,1)
-                attachments = MsgSlack(write, "#26b769")
-                slack.chat.post_message(channel, attachments=attachments)
+            # if "클리앙" in text :
+            #     write = clien(1,10,1)
+            #     attachments = MsgSlack(write, "#26b769")
+            #     slack.chat.post_message(channel, attachments=attachments)
 
-            if "지디넷" in text :
-                zd = zdnet()
-                attachments = MsgSlack(zd, "#db7515")
-                slack.chat.post_message(channel, attachments=attachments)
+            # if "지디넷" in text :
+            #     zd = zdnet()
+            #     attachments = MsgSlack(zd, "#db7515")
+            #     slack.chat.post_message(channel, attachments=attachments)
 
-            if "디데일리" in text :
-                dd = ddaily()
-                attachments = MsgSlack(dd, "#db1515")
-                slack.chat.post_message(channel, attachments=attachments)
+            # if "디데일리" in text :
+            #     dd = ddaily()
+            #     attachments = MsgSlack(dd, "#db1515")
+            #     slack.chat.post_message(channel, attachments=attachments)
 
-            if "블로그" in text :
-                blog = rssScrape()
-                attachments = MsgSlack(blog,"#5f0472")
-                slack.chat.post_message(channel, attachments=attachments)
+            # if "블로그" in text :
+            #     blog = rssScrape()
+            #     attachments = MsgSlack(blog,"#5f0472")
+            #     slack.chat.post_message(channel, attachments=attachments)
 
-            if "시사" in text :
-                sisa = ycombinator()
-                attachments = MsgSlack(sisa,"#e50d72")
-                slack.chat.post_message(channel, attachments=attachments)
+            # if "시사" in text :
+            #     sisa = ycombinator()
+            #     attachments = MsgSlack(sisa,"#e50d72")
+            #     slack.chat.post_message(channel, attachments=attachments)
 
 
     return Response(), 200
@@ -259,35 +243,34 @@ def message_actions():
 
 
     # 선택한 값이 셀렉션일 때
-
     else :
 
         selection = form_json["actions"][0]["selected_options"][0]["value"]
 
-        if selection == "okky":
-            message_text = "오키 소식을 물어다 줄게요.\n기다려 주세요..."
-            okky = get_blog_lists()
-            attachments = MsgSlack(okky, "#2630b7")
-        elif selection == "clien":
-            message_text = "클리앙에 다녀올게요.\n기다려 주세요..."
-            write = clien(1,10,1)
-            attachments = MsgSlack(write, "#26b769")
-        elif selection == "zdnet":
-            message_text = "지디넷에 날아갔다 올게요.\n기다려 주세요..."
-            zd = zdnet()
-            attachments = MsgSlack(zd, "#db7515")
-        elif selection == "ddaily":
-            message_text = "디데일리를 구경하고 올게요.\n기다려 주세요..."
-            dd = ddaily()
-            attachments = MsgSlack(dd, "#db1515")
-        elif selection == "blog" :
-            message_text = "블로그를 염탐하고 올게요.\n오래 걸려요!\n기다려 주세요..."
-            blog = rssScrape()
-            attachments = MsgSlack(blog,"#5f0472")
-        elif selection == "sisa" :
-            message_text = "시사 상식을 공부할래요.\n기다려 주세요..."
-            sisa = ycombinator()
-            attachments = MsgSlack(sisa,"#5f0472")
+        # if selection == "okky":
+        #     message_text = "오키 소식을 물어다 줄게요.\n기다려 주세요..."
+        #     okky = get_blog_lists()
+        #     attachments = MsgSlack(okky, "#2630b7")
+        # elif selection == "clien":
+        #     message_text = "클리앙에 다녀올게요.\n기다려 주세요..."
+        #     write = clien(1,10,1)
+        #     attachments = MsgSlack(write, "#26b769")
+        # elif selection == "zdnet":
+        #     message_text = "지디넷에 날아갔다 올게요.\n기다려 주세요..."
+        #     zd = zdnet()
+        #     attachments = MsgSlack(zd, "#db7515")
+        # elif selection == "ddaily":
+        #     message_text = "디데일리를 구경하고 올게요.\n기다려 주세요..."
+        #     dd = ddaily()
+        #     attachments = MsgSlack(dd, "#db1515")
+        # elif selection == "blog" :
+        #     message_text = "블로그를 염탐하고 올게요.\n오래 걸려요!\n기다려 주세요..."
+        #     blog = rssScrape()
+        #     attachments = MsgSlack(blog,"#5f0472")
+        # elif selection == "sisa" :
+        #     message_text = "시사 상식을 공부할래요.\n기다려 주세요..."
+        #     sisa = ycombinator()
+        #     attachments = MsgSlack(sisa,"#5f0472")
 
     response = slack_client.api_call(
         "chat.update",
