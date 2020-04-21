@@ -13,8 +13,8 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 ---
 
 위 봇은 아래와 같이 작동합니다.
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/1.gif)
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/2.gif)
+![](https://raw.githubusercontent.com/sinramyeon/old_ver_bot/master/1.gif)
+![](https://raw.githubusercontent.com/sinramyeon/old_ver_bot/master/2.gif)
 
 ---
 
@@ -43,12 +43,12 @@ python 으로 만든 slack bot입니다. 사용 라이브러리는 아래와 같
 왜 앱에서 봇을 만드냐면, 앱만이 interaction(사용자의 버튼 클릭 등)을 할 수 있거든요!
 
 2. 슬랙 토큰들을 등록합니다.
-![](https://github.com/hero0926/HQ_bot/blob/master/slack1.PNG?raw=true)
+![](https://github.com/sinramyeon/old_ver_bot/blob/master/slack1.PNG?raw=true)
 
 SLACK_VERIFICATION_TOKEN 에 등록하세요.
 
 3. oAuth도 만들어서 등록합니다.
-![](https://raw.githubusercontent.com/hero0926/HQ_bot/master/slack2.png)
+![](https://raw.githubusercontent.com/sinramyeon/old_ver_bot/master/slack2.png)
 
 아래 있는 토큰을 SLACK_BOT_TOKEN 에 등록하세요.
 
@@ -59,15 +59,15 @@ SLACK_VERIFICATION_TOKEN 에 등록하세요.
 > 자신의 개인정보는 소중하니 이 정보들을 깃허브 등에 올리지 않게 주의 하도록 하세요.
 
 6. 서버를 만듭니다.
-	가. 로컬 서버인 경우
-		a. ngrok를 까세요.
-		b. 그리고 ngrok가 있는 곳에 가서 cmd창에 `./ngrok http 5000`을 쳐보세요.(5000은 포트 번호예요.)
-		c. ![](https://realpython.com/images/blog_images/slack-api/ngrok.png)
-		d. 이렇게 online 이 뜨면 되어요.
-		여기서 뜬 주소에서 Forwarding 에 있는 주소가 외부에서 자신의 컴퓨터로 접속하는 주소입니다.
+  가. 로컬 서버인 경우
+    a. ngrok를 까세요.
+    b. 그리고 ngrok가 있는 곳에 가서 cmd창에 `./ngrok http 5000`을 쳐보세요.(5000은 포트 번호예요.)
+    c. ![](https://realpython.com/images/blog_images/slack-api/ngrok.png)
+    d. 이렇게 online 이 뜨면 되어요.
+    여기서 뜬 주소에서 Forwarding 에 있는 주소가 외부에서 자신의 컴퓨터로 접속하는 주소입니다.
 
-	나. 이미 있는 경우
-		a. `자신의 주소/slack/message_actions` 와 `/slack/message_options` 로 설정하세요.
+  나. 이미 있는 경우
+    a. `자신의 주소/slack/message_actions` 와 `/slack/message_options` 로 설정하세요.
 
 
 7. ![](/src/HQ_bot/slack3.png) 여기가 보이시나요?
