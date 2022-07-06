@@ -2,7 +2,7 @@ beautifulsoup4==4.6.0
 decorator==4.0.11
 feedparser==5.2.1
 Flask==0.12.2
-lxml==3.8.0
+lxml==4.9.1
 requests==2.18.3
 rtmbot==0.4.0
 slackclient==1.0.2
